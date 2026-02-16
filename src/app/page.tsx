@@ -20,7 +20,18 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await cloudVendorService.getAllVendors(0, 50, searchQuery);
-      setVendors(response.data || []);
+
+      // Safety check for paginated data structure
+      let vendorList: CloudVendor[] = [];
+      if (response && response.data) {
+        if (Array.isArray(response.data)) {
+          vendorList = response.data;
+        } else if (typeof response.data === 'object' && 'content' in response.data) {
+          vendorList = (response.data as any).content;
+        }
+      }
+
+      setVendors(vendorList || []);
     } catch (error) {
       console.error('Failed to fetch vendors:', error);
     } finally {

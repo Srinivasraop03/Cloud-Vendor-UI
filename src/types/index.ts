@@ -8,5 +8,11 @@ export interface CloudVendor {
 export interface ApiResponse<T> {
     message: string;
     httpStatus: string;
-    data: T;
+    data: T | {
+        content: T;
+        totalPages: number;
+        totalElements: number;
+        size: number;
+        number: number;
+    };
 }
